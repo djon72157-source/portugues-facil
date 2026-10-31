@@ -1,0 +1,48 @@
+name: Build Portuguese Facil APK
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'Portugues_Facil_Cloud_Build_Package_v2.zip'
+      - '.github/workflows/build-apk.yml'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Unpack Android project
+        run: |
+          unzip -o Portugues_Facil_Cloud_Build_Package_v2.zip -d .
+          test -f Portugues_Facil_Android/settings.gradle
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install Android SDK packages
+        run: sdkmanager "platforms;android-35" "build-tools;35.0.0"
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.7'
+
+      - name: Build debug APK
+        working-directory: Portugues_Facil_Android
+        run: gradle assembleDebug
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Portugues-Facil-APK
+          path: Portugues_Facil_Android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
