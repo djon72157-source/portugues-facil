@@ -18,7 +18,18 @@ jobs:
         run: |
           unzip -o Portugues_Facil_Cloud_Build_Package_v2.zip -d .
           test -f Portugues_Facil_Android/settings.gradle
-
+      - name: Set Java compatibility to 17
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path("Portugues_Facil_Android/app/build.gradle")
+          s = p.read_text()
+          needle = "    compileSdk 35\n"
+          replacement = needle + "\n    compileOptions {\n        sourceCompatibility JavaVersion.VERSION_17\n        targetCompatibility JavaVersion.VERSION_17\n    }\n"
+          if needle not in s:
+              raise SystemExit("Could not find compileSdk 35")
+          p.write_text(s.replace(needle, replacement, 1))
+          PY
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
