@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     paths:
-      - 'Portugues_Facil_Cloud_Build_Package_v2.zip'
+      - 'Portugues_Facil_Cloud_Build_Package_v2_FIXED.zip'
       - '.github/workflows/build-apk.yml'
 
 jobs:
@@ -16,7 +16,7 @@ jobs:
 
       - name: Unpack Android project
         run: |
-          unzip -o Portugues_Facil_Cloud_Build_Package_v2.zip -d .
+          unzip -o Portugues_Facil_Cloud_Build_Package_v2_FIXED.zip -d .
           test -f Portugues_Facil_Android/settings.gradle
       - name: Set Java compatibility to 17
         run: |
